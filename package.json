@@ -13,7 +13,9 @@
     "build": "rollup -c rollup.config.js",
     "dev": "rollup -c rollup.config.js --watch",
     "clean": "rm -rf dist",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint src --ext .ts,.tsx",
+    "format": "prettier --write src/**/*.{ts,tsx}"
   },
   "keywords": [],
   "author": {
@@ -23,12 +25,19 @@
   "license": "MIT",
   "packageManager": "pnpm@10.11.0",
   "devDependencies": {
+    "@eslint/js": "^9.33.0",
     "@rollup/plugin-commonjs": "^28.0.6",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-typescript": "^12.1.4",
+    "@types/eslint": "^9.6.1",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
     "@types/rollup-plugin-peer-deps-external": "^2.2.5",
+    "@typescript-eslint/eslint-plugin": "^8.40.0",
+    "@typescript-eslint/parser": "^8.40.0",
+    "eslint": "^9.33.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.6.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "rollup": "^4.46.4",
