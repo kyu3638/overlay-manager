@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2020", // 최종 JS를 ES2020 문법으로 컴파일
+    "lib": ["ES2020", "DOM"], // ES2020 + 브라우저 DOM API 사용 가능
+    "module": "ESNext", // 최신 ES 모듈 방식 사용
+    "moduleResolution": "node", // Node.js 방식으로 모듈 찾기
+    "declaration": true, // .d.ts 타입 정의 파일 생성
+    "outDir": "dist", // 컴파일 결과를 dist 폴더에 저장
+    "strict": true, // 엄격한 타입 검사
+    "jsx": "react-jsx", // React JSX 변환
+    "esModuleInterop": true, // CommonJS 모듈과 ES 모듈 간 호환성
+    "skipLibCheck": true, // 라이브러리 타입 검사 스킵(빌드 속도 향상)
+    "forceConsistentCasingInFileNames": true // 대소문자의 일관성을 강제(모든 OS에서 동일하게 동작하도록)
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
