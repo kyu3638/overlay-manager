@@ -1,48 +1,64 @@
-import { Fragment, ReactNode, useState } from 'react';
-import OverlayContext from './OverlayContext';
-import { OverlayContextValue, OverlayItem } from './types';
-import { createRandomId } from './lib/utils/createRandomId';
-import { createPortal } from 'react-dom';
-import useCreateRoot from './lib/hooks/useCreateRoot';
+import { PropsWithChildren, useState, useEffect } from 'react';
+import { enrollEventListener, overlay } from './overlay-events';
+import { OverlayContext } from './OverlayContext';
+import OverlayRenderer from './OverlayRenderer';
+import { OverlayState, RenderFunction } from './types';
 
-type OverlayProviderProps = {
-  children: ReactNode;
-};
+export const OverlayProvider = ({ children }: PropsWithChildren) => {
+  const [overlayState, setOverlayState] = useState<OverlayState>({
+    overlays: {},
+    stack: [],
+  });
 
-const OverlayProvider = ({ children }: OverlayProviderProps) => {
-  const [overlayList, setOverlayList] = useState<OverlayItem[]>([]);
+  const handleOpen = ({ id, render }: { id: string; render: RenderFunction }) => {
+    setOverlayState((prev) => {
+      const newOverlays = { ...prev.overlays, [id]: { id, render } };
+      const newStack = [...prev.stack, id];
 
-  const open: OverlayContextValue['open'] = (component) => {
-    const id = createRandomId();
-    const newOverlay: OverlayItem = { id, component };
-    setOverlayList((prev) => [...prev, newOverlay]);
+      return {
+        ...prev,
+        overlays: newOverlays,
+        stack: newStack,
+      };
+    });
   };
 
-  const close: OverlayContextValue['close'] = (id) => {
-    if (!id) {
-      setOverlayList((prev) => [...prev].slice(0, -1));
-    } else {
-      setOverlayList((prev) => [...prev].filter((overlay) => overlay.id !== id));
-    }
+  const handleClose = (id: string) => {
+    setOverlayState((prev) => {
+      const { [id]: _, ...rest } = prev.overlays;
+
+      return {
+        ...prev,
+        overlays: rest,
+        stack: prev.stack.filter((overlayId) => overlayId !== id),
+      };
+    });
   };
 
-  const closeAll: OverlayContextValue['closeAll'] = () => {
-    setOverlayList([]);
+  const handleCloseAll = () => {
+    setOverlayState({
+      overlays: {},
+      stack: [],
+    });
   };
 
-  const root = useCreateRoot('overlay-root');
+  enrollEventListener({ open: handleOpen, close: handleClose, closeAll: handleCloseAll });
+
+  useEffect(() => {
+    return () => handleCloseAll();
+  }, []);
 
   return (
-    <OverlayContext.Provider value={{ overlayList, open, close, closeAll }}>
+    <OverlayContext.Provider value={null}>
       {children}
-      {createPortal(
-        overlayList.map((overlay) => {
-          return <Fragment key={overlay.id}>{overlay.component}</Fragment>;
-        }),
-        root
-      )}
+      {overlayState.stack.map((id) => {
+        const overlayItem = overlayState.overlays[id];
+        if (!overlayItem) return null;
+
+        const isOpen = overlayState.stack.includes(id);
+
+        return <OverlayRenderer key={id} overlay={overlayItem} isOpen={isOpen} onClose={() => overlay.close(id)} />;
+      })}
     </OverlayContext.Provider>
   );
 };
-
-export default OverlayProvider;

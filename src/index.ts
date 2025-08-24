@@ -1,4 +1,5 @@
-export { default as OverlayProvider } from './OverlayProvider';
-export { default as OverlayContext } from './OverlayContext';
-export { default as useOverlayContext } from './useOverlayContext';
-export type { OverlayItem, OverlayContextValue } from './types';
+import { overlay } from './overlay-events';
+import { OverlayProvider } from './OverlayProvider';
+import { useOverlayContext } from './useOverlayContext';
+
+export { overlay, OverlayProvider, useOverlayContext };
