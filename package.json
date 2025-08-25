@@ -1,6 +1,6 @@
 {
   "name": "@kyu3638/overlay-manager",
-  "version": "0.1.2",
+  "version": "0.1.5",
   "description": "tool for managing overlay",
   "repository": {
     "type": "git",
@@ -25,7 +25,11 @@
     "lint": "eslint src --ext .ts,.tsx",
     "format": "prettier --write src/**/*.{ts,tsx}"
   },
-  "keywords": [],
+  "keywords": [
+    "overlay",
+    "overlay-manager",
+    "react-overlay"
+  ],
   "author": {
     "name": "Seungkyu Jeon",
     "email": "kyu3638@gmail.com"
